@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TESORO | Luxury Ayurvedic Skincare</title>
+    <meta name="description"
+        content="Discover the essence of ancient Ayurveda with TESORO. Premium, natural skincare for a radiant, balanced life.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #006A4E;
+            --secondary: #ECEADD;
+            --accent: #FFC446;
+            --text-dark: #1a1a1a;
+            --text-light: #ECEADD;
+            --card-bg: #ffffff;
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+            --glass: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --nav-bg: rgba(236, 234, 221, 0.85);
+        }
+
+        [data-theme="dark"] {
+            --primary: #ECEADD;
+            --secondary: #080C10;
+            --accent: #FFC446;
+            --text-dark: #ECEADD;
+            --text-light: #080C10;
+            --card-bg: #111821;
+            --glass: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --nav-bg: rgba(8, 12, 16, 0.9);
+        }
+
+        body.dark-mode {
+            background-color: var(--secondary);
+            color: var(--text-dark);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary);
+            color: var(--secondary);
+        }
+
+
+
+        /* Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s var(--ease), transform 1s var(--ease);
+            will-change: opacity, transform;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 1s var(--ease), transform 1s var(--ease);
+            will-change: opacity, transform;
+        }
+
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 1s var(--ease), transform 1s var(--ease);
+            will-change: opacity, transform;
+        }
+
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .stagger-1 {
+            transition-delay: 0.1s;
+        }
+
+        .stagger-2 {
+            transition-delay: 0.2s;
+        }
+
+        .stagger-3 {
+            transition-delay: 0.3s;
+        }
+
+        .stagger-4 {
+            transition-delay: 0.4s;
+        }
+
+        .lazy-bg:not(.loaded) {
+            background-image: none !important;
+            background-color: #f0f0f0;
+        }
+
+        .lazy-bg {
+            position: relative;
+            transition: opacity 1s var(--ease), transform 1s var(--ease), background 1s var(--ease) !important;
+        }
+
+        .lazy-bg.loaded {
+            background-color: transparent;
+        }
+
+        .lazy-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            animation: shimmer 2s infinite;
+            display: block;
+        }
+
+        .lazy-bg.loaded::before {
+            display: none;
+        }
+
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--secondary);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        h1,
+        h2,
+        h3,
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            background: var(--nav-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 3000;
+            transition: all 0.4s var(--ease);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        nav.scrolled {
+            height: 60px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .brand-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 400;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .cart-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--accent);
+            color: var(--primary);
+            font-size: 10px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* Hero */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+            position: relative;
+            background: var(--primary);
+            background-image: url('hero_bg_texture.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-light);
+            overflow: hidden;
+        }
+
+        .hero-image {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 60%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            mask-image: linear-gradient(to left, black 50%, transparent);
+            transition: opacity 1.5s var(--ease);
+        }
+
+        .hero-image.loaded {
+            opacity: 0.6;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 50%;
+        }
+
+        .hero-tagline {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            color: var(--accent);
+            display: block;
+        }
+
+        .glass-slider-container {
+            position: relative;
+            display: inline-block;
+
+        }
+
+        .glass-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 160px;
+            height: 90px;
+            background: var(--primary);
+            background-image: url('hero_bg_texture.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: center;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 0 25px rgba(255, 255, 255, 0.2), inset 0 -10px 20px rgba(0, 0, 0, 0.2);
+            filter: contrast(1.1) brightness(1.1);
+            animation: liquid-wobble 4s infinite ease-in-out;
+        }
+
+        @keyframes liquid-wobble {
+
+            0%,
+            100% {
+                border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            }
+
+            25% {
+                border-radius: 45% 55% 45% 55% / 55% 45% 55% 45%;
+            }
+
+            50% {
+                border-radius: 55% 45% 55% 45% / 45% 55% 45% 55%;
+            }
+
+            75% {
+                border-radius: 48% 52% 52% 48% / 52% 48% 48% 52%;
+            }
+        }
+
+        .hero h1,
+        .glass-slider h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            line-height: 1.1;
+            margin: 0;
+            padding: 0;
+            white-space: nowrap;
+        }
+
+        .hero h1 {
+            margin-bottom: 30px;
+        }
+
+        .glass-slider h1 {
+            position: absolute;
+            color: var(--text-light);
+            pointer-events: none;
+            text-align: left;
+            transform-origin: 0 0;
+            will-change: transform, left, top;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .glass-slider-container:hover .glass-slider {
+            opacity: 1;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 18px 45px;
+            background: transparent;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border-radius: 4px;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            border: 1px solid var(--primary);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            font-size: 0.8rem;
+        }
+
+        .btn--primary {
+            background: var(--primary);
+            color: var(--secondary);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            background: var(--text-dark);
+            color: var(--secondary);
+            border-color: var(--text-dark);
+        }
+
+        section {
+            padding: 100px 5%;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            font-style: italic;
+            color: #666;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .about-img {
+            width: 100%;
+            height: 750px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .about-text h3 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+
+        .about-text p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        .ritual-section {
+            height: 80vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: white;
+            text-align: center;
+        }
+
+        .ritual-video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            filter: brightness(0.6);
+        }
+
+        .ritual-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(0, 106, 78, 0.4));
+            z-index: 0;
+        }
+
+        .ritual-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            padding: 0 5%;
+        }
+
+        .ritual-content h2 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            position: relative;
+            transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            text-align: center;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 400px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: #fdfcf9;
+            transition: transform 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .product-info {
+            padding: 30px 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-info h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .product-category {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #999;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .product-price {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            display: block;
+            opacity: 0.8;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: var(--secondary);
+            border: 1px solid var(--primary);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            border-radius: 4px;
+        }
+
+        .add-to-cart:hover {
+            background: var(--text-dark);
+            border-color: var(--text-dark);
+        }
+
+        /* Product Detail View */
+        .product-detail-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--secondary);
+            z-index: 2000;
+            overflow-y: auto;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.6s var(--ease);
+            padding-top: 100px;
+        }
+
+        .product-detail-view.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .detail-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 5%;
+        }
+
+        .detail-nav {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .back-btn {
+            background: none;
+            border: 1px solid var(--glass-border);
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            background: var(--primary);
+            color: var(--secondary);
+        }
+
+        .detail-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        /* Gallery Section */
+        .expert-slideshow {
+            position: relative;
+            background: #fff;
+            border: 1px solid var(--glass-border);
+            height: 600px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.8s var(--ease);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide-bg-container {
+            transition: transform 1.2s var(--ease);
+        }
+
+        .slide.active .slide-bg-container {
+            transform: scale(1.05);
+        }
+
+        /* Slideshow Arrows */
+        .slideshow-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 20;
+            transition: all 0.4s var(--ease);
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .slideshow-arrow:hover {
+            background: var(--primary);
+            color: var(--secondary);
+        }
+
+        .arrow-prev {
+            left: 20px;
+        }
+
+        .arrow-next {
+            right: 20px;
+        }
+
+        .thumbnail-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .thumb {
+            width: 80px;
+            height: 80px;
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 5px;
+            background: white;
+        }
+
+        .thumb.active {
+            border-color: var(--primary);
+            border-width: 2px;
+        }
+
+        /* Info Section */
+        .detail-info {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            padding: 0;
+        }
+
+        .detail-category {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .detail-title {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            color: var(--primary);
+            margin: 0;
+        }
+
+        .detail-price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .detail-price {
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Actions */
+        .detail-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .quantity-box {
+            display: flex;
+            border: 1px solid var(--glass-border);
+            height: 56px;
+            align-items: center;
+            border-radius: 4px;
+        }
+
+        .qty-btn {
+            width: 50px;
+            height: 100%;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .qty-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .qty-input {
+            width: 60px;
+            text-align: center;
+            border: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            background: none;
+            color: var(--primary);
+        }
+
+        .add-to-bag {
+            flex-grow: 1;
+            height: 56px;
+            background: var(--primary);
+            color: var(--secondary);
+            border: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: var(--transition);
+            border-radius: 4px;
+        }
+
+        .add-to-bag:hover {
+            background: var(--text-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Description Accordion */
+        .accordion {
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+            margin-top: 20px;
+        }
+
+        .accordion-header {
+            width: 100%;
+            padding: 25px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s var(--ease);
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .accordion.active .accordion-content {
+            max-height: 500px;
+            padding-bottom: 30px;
+        }
+
+        /* Cart Drawer */
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            visibility: hidden;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 450px;
+            height: 100%;
+            background: var(--secondary);
+            z-index: 2001;
+            transition: var(--transition);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -10px 0 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .cart-drawer.active {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 20px;
+        }
+
+        .cart-header h3 {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 2.5rem;
+            cursor: pointer;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .cart-items {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            align-items: center;
+        }
+
+        .cart-item-img {
+            width: 100px;
+            height: 100px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: #fff;
+            border-radius: 12px;
+            flex-shrink: 0;
+            border: 1px solid var(--glass-border);
+        }
+
+        .cart-item-info h4 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 4px 12px;
+            gap: 15px;
+            margin-top: 10px;
+            width: fit-content;
+        }
+
+        .cart-footer {
+            margin-top: auto;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 30px;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .cart-total span:first-child {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        #cart-total-amount {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 10px 30px rgba(0, 106, 78, 0.2);
+        }
+
+        .checkout-btn:hover {
+            background: var(--text-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Account Drawer */
+        .account-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            visibility: hidden;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .account-drawer {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 450px;
+            height: 100%;
+            background: var(--secondary);
+            z-index: 2001;
+            transition: var(--transition);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -10px 0 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .account-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .account-drawer.active {
+            right: 0;
+        }
+
+        .auth-toggle {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 10px;
+        }
+
+        .auth-tab {
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #888;
+            cursor: pointer;
+            padding: 5px 0;
+            position: relative;
+        }
+
+        .auth-tab.active {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .auth-form {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .auth-form.active {
+            display: flex;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #666;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 40px;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: var(--transition);
+        }
+
+        .auth-btn:hover {
+            background: var(--text-dark);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 1024px) {
+            .detail-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .expert-slideshow {
+                height: 450px;
+            }
+
+            .cart-drawer,
+            .account-drawer {
+                width: 100%;
+                right: -100%;
+            }
+        }
+
+        footer {
+            background: var(--primary);
+            color: var(--text-light);
+            padding: 80px 5% 40px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .copyright {
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 40px;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-content {
+                width: 100%;
+            }
+
+            .hero-image {
+                width: 100%;
+                opacity: 0.4;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-drawer,
+            .account-drawer {
+                width: 100%;
+                right: -100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="particle-canvas"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></canvas>
+
+
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <a href="#" class="brand-logo">TESORO</a>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#about">About Us</a>
+            <a href="#products">Products</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <div class="nav-icons">
+            <button id="theme-toggle" class="theme-toggle">
+                <span id="theme-icon">🌙</span>
+                <span id="theme-text">Night Mode</span>
+            </button>
+            <button class="account-btn" id="open-account">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+            </button>
+            <button class="cart-btn" id="open-cart">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                    <path d="M3 6h18" />
+                    <path d="M16 10a4 4 0 0 1-8 0" />
+                </svg>
+                <span class="cart-count">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-image lazy-bg" data-bg="website-bg.webp"></div>
+        <div class="hero-content">
+            <span class="hero-tagline">Timeless Wisdom, Radiant Skin</span>
+            <div class="glass-slider-container" id="glass-container">
+                <h1 id="hero-title">Elevate Your<br>Natural Glow</h1>
+                <div class="glass-slider" id="slider">
+                    <h1 id="hero-title-refract">Elevate Your<br>Natural Glow</h1>
+                </div>
+            </div>
+            <p class="reveal stagger-2" style="margin-bottom: 40px; font-size: 1.1rem; opacity: 0.9; max-width: 500px;">
+                Experience the magic of Ayurveda. Potent botanicals meets modern science for skincare that truly heals.
+            </p>
+            <div class="reveal stagger-3">
+                <a href="#products" class="btn btn--primary">Shop Collection</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="about-grid">
+            <div class="about-img reveal-left lazy-bg" data-bg="about_us_new.webp"
+                style="background-image: url('about_us_new.webp');"></div>
+            <div class="about-text reveal-right">
+                <h3 class="reveal stagger-1">Ayurveda, Refined.</h3>
+                <p class="reveal stagger-2">At TESORO, we believe that beauty is an external reflection of internal
+                    balance. Our heritage spans centuries of Ayurvedic wisdom.</p>
+                <p class="reveal stagger-3">We source the finest organic herbs from the foothills of the Himalayas,
+                    preserving their life force with high performance techniques.</p>
+                <div class="reveal stagger-4">
+                    <a href="#products" class="btn btn--primary">Discover More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ritual Section -->
+    <section class="ritual-section">
+        <video class="ritual-video-bg" autoplay muted loop playsinline poster="hero_bg_texture.jpg">
+            <source
+                src="https://assets.mixkit.co/videos/preview/mixkit-slow-motion-of-a-drop-of-oil-in-water-40941-large.mp4"
+                type="video/mp4">
+        </video>
+        <div class="ritual-overlay"></div>
+        <div class="ritual-content reveal">
+            <h2>Gentle by Nature. Powerful by Design.</h2>
+            <a href="#products" class="btn btn--primary"
+                style="border-color: white; color: white; background: transparent;">View Collection</a>
+        </div>
+    </section>
+
+    <!-- Products Section (Collections) -->
+    <section id="products">
+        <div class="section-title reveal">
+            <h2>Our Essentials</h2>
+            <p>Curated solutions for every skin concern</p>
+        </div>
+        <div class="products-grid">
+            <div class="product-card reveal stagger-1" onclick="openProductDetail('Anti aging Serum')">
+                <div class="product-img lazy-bg" data-bg="serum.webp"></div>
+                <div class="product-info">
+                    <p class="product-category">Anti-Aging</p>
+                    <h3>Anti aging Serum</h3>
+                    <span class="product-price">₹7,199</span>
+                    <button class="add-to-cart"
+                        onclick="event.stopPropagation(); addToCart('Anti aging Serum', 7199, 'serum.webp')">Add to
+                        Cart</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Cart Drawer -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header">
+            <h3>Your Bag</h3>
+            <button class="close-cart" id="close-cart">&times;</button>
+        </div>
+        <div class="cart-items" id="cart-items-container"></div>
+        <div class="cart-footer">
+            <div class="cart-total"><span>Subtotal</span><span id="cart-total-amount">₹0</span></div>
+            <button class="checkout-btn">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Account Drawer -->
+    <div class="account-overlay" id="account-overlay"></div>
+    <div class="account-drawer" id="account-drawer">
+        <div class="account-header">
+            <h3>Account</h3><button class="close-cart" id="close-account">&times;</button>
+        </div>
+        <div class="auth-toggle">
+            <button class="auth-tab active" data-tab="login">Login</button>
+            <button class="auth-tab" data-tab="signup">Sign Up</button>
+        </div>
+        <form id="login-form" class="auth-form active">
+            <div class="form-group"><label>Email</label><input type="email"></div>
+            <div class="form-group"><label>Password</label><input type="password"></div>
+            <button type="submit" class="auth-btn">Sign In</button>
+        </form>
+        <form id="signup-form" class="auth-form">
+            <div class="form-group"><label>Full Name</label><input type="text" required placeholder="Your name"></div>
+            <div class="form-group"><label>Email</label><input type="email" required placeholder="your@email.com"></div>
+            <div class="form-group"><label>Password</label><input type="password" required
+                    placeholder="Min 8 characters" minlength="8"></div>
+            <p style="font-size:0.75rem; color:#666; margin-bottom:15px;">Password must contain uppercase, lowercase,
+                and a number</p>
+            <button type="submit" class="auth-btn">Create Account</button>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h2>TESORO</h2>
+                <p>Harmonizing the mind, body, and skin through the pure power of Ayurveda.</p>
+            </div>
+        </div>
+        <div class="copyright">&copy; 2026 TESORO Ayurvedic Skincare. All rights reserved.</div>
+    </footer>
+
+    <!-- Product Detail View -->
+    <div class="product-detail-view" id="product-detail">
+        <div class="detail-container">
+            <div class="detail-nav reveal"><button class="back-btn" onclick="closeProductDetail()">← Back to
+                    Store</button></div>
+            <div class="detail-layout">
+                <div class="detail-gallery reveal-left">
+                    <div class="expert-slideshow" id="detail-slideshow">
+                        <button class="slideshow-arrow arrow-prev" onclick="prevSlide()">←</button>
+                        <button class="slideshow-arrow arrow-next" onclick="nextSlide()">→</button>
+                    </div>
+                    <div class="thumbnail-container" id="detail-thumbnails"></div>
+                </div>
+                <div class="detail-info">
+                    <p class="detail-category reveal stagger-1" id="detail-category"></p>
+                    <h1 class="detail-title reveal stagger-2" id="detail-title"></h1>
+                    <div class="detail-price-row reveal stagger-3"><span class="detail-price" id="detail-price"></span>
+                    </div>
+                    <div class="detail-actions reveal stagger-3">
+                        <div class="quantity-box">
+                            <button class="qty-btn" onclick="changeQty(-1)">-</button>
+                            <input type="text" class="qty-input" value="1" id="detail-qty" readonly>
+                            <button class="qty-btn" onclick="changeQty(1)">+</button>
+                        </div>
+                        <button class="add-to-bag" id="detail-add-to-bag">Add to Bag</button>
+                    </div>
+                    <div class="accordion reveal stagger-4" id="desc-accordion">
+                        <button class="accordion-header" onclick="toggleAccordion()">Description
+                            <span>+</span></button>
+                        <div class="accordion-content">
+                            <p id="detail-description"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const productsData = {
+            'Anti aging Serum': {
+                category: 'Anti-Aging',
+                price: '₹7,199',
+                description: 'The pinnacle of Ayurvedic science. Our Anti aging Serum is a potent botanical complex designed to firm, smooth, and rejuvenate the skin. Infused with legendary Himalayan herbs and cold-pressed oils, it works at a cellular level to rewind the hands of time while providing a radiant, silk-like finish.',
+                images: ['serum.webp', 'serum-2.webp', 'serum-3.webp', 'serum-4.webp', 'serum-5.webp'],
+                rawPrice: 7199
+            },
+
+        };
+
+        // Theme Logic
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const themeText = document.getElementById('theme-text');
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            document.body.classList.toggle('dark-mode');
+            themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            themeText.textContent = newTheme === 'dark' ? 'Day Mode' : 'Night Mode';
+        });
+
+        // Navbar Links - Close overlays
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                closeProductDetail();
+                closeCart();
+            });
+        });
+
+        function openProductDetail(productName) {
+            const product = productsData[productName];
+            if (!product) return;
+            const detailView = document.getElementById('product-detail');
+            document.getElementById('detail-category').textContent = product.category;
+            document.getElementById('detail-title').textContent = productName;
+            document.getElementById('detail-price').textContent = product.price;
+            document.getElementById('detail-description').textContent = product.description;
+            document.getElementById('detail-qty').value = 1;
+
+            const slideshow = document.getElementById('detail-slideshow');
+            const thumbContainer = document.getElementById('detail-thumbnails');
+            slideshow.querySelectorAll('.slide').forEach(s => s.remove());
+            thumbContainer.innerHTML = '';
+
+            product.images.forEach((img, index) => {
+                const slide = document.createElement('div');
+                slide.className = `slide ${index === 0 ? 'active' : ''} lazy-bg`;
+                slide.setAttribute('data-bg', img);
+                slide.innerHTML = `<div class="slide-bg-container" style="width:100%; height:100%; background-size: contain; background-repeat: no-repeat; background-position: center;"></div>`;
+                slideshow.appendChild(slide);
+
+                const thumb = document.createElement('div');
+                thumb.className = `thumb ${index === 0 ? 'active' : ''} lazy-bg`;
+                thumb.setAttribute('data-bg', img);
+                thumb.style.backgroundSize = 'contain';
+                thumb.style.backgroundRepeat = 'no-repeat';
+                thumb.style.backgroundPosition = 'center';
+                thumb.onclick = () => goToSlide(index);
+                thumbContainer.appendChild(thumb);
+            });
+
+            const addBtn = document.getElementById('detail-add-to-bag');
+            addBtn.onclick = () => {
+                const qty = parseInt(document.getElementById('detail-qty').value);
+                for (let i = 0; i < qty; i++) addToCart(productName, product.rawPrice, product.images[0]);
+            };
+
+            detailView.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => el.classList.remove('active'));
+            detailView.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                detailView.querySelectorAll('.reveal, .reveal-left, .reveal-right, .lazy-bg').forEach(el => revealObserver.observe(el));
+            }, 50);
+            startSlideshow();
+        }
+
+        function closeProductDetail() { document.getElementById('product-detail').classList.remove('active'); document.body.style.overflow = 'auto'; stopSlideshow(); }
+        function changeQty(amt) { const qtyInput = document.getElementById('detail-qty'); let val = parseInt(qtyInput.value) + amt; if (val < 1) val = 1; qtyInput.value = val; }
+        function toggleAccordion() { const acc = document.getElementById('desc-accordion'); acc.classList.toggle('active'); acc.querySelector('span').textContent = acc.classList.contains('active') ? '-' : '+'; }
+
+        let slideInterval;
+        function startSlideshow() { stopSlideshow(); slideInterval = setInterval(nextSlide, 5000); }
+        function stopSlideshow() { clearInterval(slideInterval); }
+        function updateGalleryState(index) {
+            const slides = document.querySelectorAll('.slide');
+            const thumbs = document.querySelectorAll('.thumb');
+            slides.forEach(s => s.classList.remove('active'));
+            thumbs.forEach(t => t.classList.remove('active'));
+            if (slides[index]) slides[index].classList.add('active');
+            if (thumbs[index]) thumbs[index].classList.add('active');
+        }
+        function nextSlide() { const slides = document.querySelectorAll('.slide'); if (slides.length <= 1) return; let current = Array.from(slides).findIndex(s => s.classList.contains('active')); updateGalleryState((current + 1) % slides.length); }
+        function prevSlide() { const slides = document.querySelectorAll('.slide'); if (slides.length <= 1) return; let current = Array.from(slides).findIndex(s => s.classList.contains('active')); updateGalleryState((current - 1 + slides.length) % slides.length); }
+        function goToSlide(index) { updateGalleryState(index); startSlideshow(); }
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
+        });
+
+        // Glass Lens
+        const glassContainer = document.getElementById('glass-container');
+        const slider = document.getElementById('slider');
+        const refractTitle = document.getElementById('hero-title-refract');
+        const mainTitle = document.getElementById('hero-title');
+        let mouseX = 0, mouseY = 0, currentX = 0, currentY = 0, velX = 0, velY = 0;
+        glassContainer.addEventListener('mousemove', (e) => { const rect = glassContainer.getBoundingClientRect(); mouseX = e.clientX - rect.left; mouseY = e.clientY - rect.top; });
+        glassContainer.addEventListener('mouseenter', () => slider.style.opacity = '1');
+        glassContainer.addEventListener('mouseleave', () => slider.style.opacity = '0');
+
+        function updateLens() {
+            velX += (mouseX - currentX) * 0.08; velY += (mouseY - currentY) * 0.08;
+            velX *= 0.75; velY *= 0.75;
+            currentX += velX; currentY += velY;
+            slider.style.left = currentX + 'px'; slider.style.top = currentY + 'px';
+            const rect = glassContainer.getBoundingClientRect();
+            const tiltX = (currentY / rect.height - 0.5) * 12;
+            const tiltY = (currentX / rect.width - 0.5) * -12;
+            const speed = Math.sqrt(velX ** 2 + velY ** 2);
+            const stretch = Math.min(speed * 0.015, 0.4);
+            const angle = Math.atan2(velY, velX) * 180 / Math.PI;
+            slider.style.transform = `translate(-50%, -50%) perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) rotate(${angle}deg) scale(${1 + stretch}, ${1 - stretch * 0.5}) rotate(${-angle}deg)`;
+            const titleRect = mainTitle.getBoundingClientRect();
+            const scale = 1.1;
+            refractTitle.style.left = (slider.offsetWidth / 2 - (currentX - (titleRect.left - rect.left)) * scale) + 'px';
+            refractTitle.style.top = (slider.offsetHeight / 2 - (currentY - (titleRect.top - rect.top)) * scale) + 'px';
+            refractTitle.style.transform = `scale(${scale})`;
+            requestAnimationFrame(updateLens);
+        }
+        updateLens();
+
+        // Cart
+        let cart = [];
+        const openCart = () => { document.getElementById('cart-overlay').classList.add('active'); document.getElementById('cart-drawer').classList.add('active'); document.body.style.overflow = 'hidden'; };
+        const closeCart = () => { document.getElementById('cart-overlay').classList.remove('active'); document.getElementById('cart-drawer').classList.remove('active'); document.body.style.overflow = 'auto'; };
+        document.getElementById('open-cart').addEventListener('click', openCart);
+        document.getElementById('close-cart').addEventListener('click', closeCart);
+        document.getElementById('cart-overlay').addEventListener('click', closeCart);
+
+        function addToCart(name, price, img) {
+            const item = cart.find(i => i.name === name);
+            if (item) item.quantity++; else cart.push({ name, price, img, quantity: 1 });
+            updateCart();
+            openCart();
+        }
+
+        function changeQuantity(name, delta) {
+            const item = cart.find(i => i.name === name);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) removeFromCart(name);
+                else updateCart();
+            }
+        }
+
+        function removeFromCart(name) {
+            cart = cart.filter(i => i.name !== name);
+            updateCart();
+        }
+
+        function updateCart() {
+            const container = document.getElementById('cart-items-container');
+            container.innerHTML = cart.length === 0 ? '<p style="text-align:center; padding: 50px 0; opacity: 0.5;">Your bag is empty</p>' : '';
+            let total = 0, count = 0;
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                count += item.quantity;
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <div class="cart-item-img" style="background-image: url('${item.img}')"></div>
+                    <div class="cart-item-info">
+                        <h4>${item.name}</h4>
+                        <div class="cart-item-details">
+                            <div class="quantity-controls">
+                                <button onclick="changeQuantity('${item.name}', -1)">-</button>
+                                <span>${item.quantity}</span>
+                                <button onclick="changeQuantity('${item.name}', 1)">+</button>
+                            </div>
+                            <span style="font-weight:700; color:var(--primary); margin-top:5px; display:block;">₹${(item.price * item.quantity).toLocaleString('en-IN')}</span>
+                        </div>
+                        <button onclick="removeFromCart('${item.name}')" style="background:none; border:none; color:#f44336; font-size:0.7rem; text-transform:uppercase; margin-top:10px; cursor:pointer; padding:0;">Remove</button>
+                    </div>`;
+                container.appendChild(div);
+            });
+            document.getElementById('cart-total-amount').textContent = `₹${total.toLocaleString('en-IN')}`;
+            document.querySelectorAll('.cart-count').forEach(el => el.textContent = count);
+        }
+
+        // Account
+        const openAccountBtn = document.getElementById('open-account');
+        const closeAccountBtn = document.getElementById('close-account');
+        const accountOverlay = document.getElementById('account-overlay');
+        const accountDrawer = document.getElementById('account-drawer');
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const authForms = document.querySelectorAll('.auth-form');
+
+        openAccountBtn.addEventListener('click', () => { accountOverlay.classList.add('active'); accountDrawer.classList.add('active'); document.body.style.overflow = 'hidden'; });
+        const closeAccount = () => { accountOverlay.classList.remove('active'); accountDrawer.classList.remove('active'); document.body.style.overflow = 'auto'; };
+        closeAccountBtn.addEventListener('click', closeAccount);
+        accountOverlay.addEventListener('click', closeAccount);
+
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.tab;
+                authTabs.forEach(t => t.classList.remove('active'));
+                authForms.forEach(f => f.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(`${target}-form`).classList.add('active');
+            });
+        });
+
+        // Observer
+        const revealCallback = (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    if (entry.target.classList.contains('lazy-bg')) {
+                        const url = entry.target.dataset.bg;
+                        const img = new Image();
+                        img.onload = () => {
+                            const bg = entry.target.querySelector('.slide-bg-container');
+                            if (bg) bg.style.backgroundImage = `url('${url}')`;
+                            else entry.target.style.backgroundImage = `url('${url}')`;
+                            entry.target.classList.add('loaded');
+                        };
+                        img.onerror = () => {
+                            console.error(`Failed to load image: ${url}`);
+                            // Fallback: mark as loaded so at least the background color or inline style shows
+                            entry.target.classList.add('loaded');
+                        };
+                        img.src = url;
+                    }
+                }
+            });
+        };
+        const revealObserver = new IntersectionObserver(revealCallback, { threshold: 0.1 });
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .lazy-bg').forEach(el => revealObserver.observe(el));
+
+        // ========================================
+        // PARTICLE SYSTEM
+        // ========================================
+        const canvas = document.getElementById('particle-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                initParticles();
+            }
+            window.addEventListener('resize', resizeCanvas);
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 2 + 0.1;
+                    this.speedX = (Math.random() - 0.5) * 0.3;
+                    this.speedY = (Math.random() - 0.5) * 0.3;
+                    this.opacity = Math.random() * 0.3 + 0.05;
+                }
+
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+
+                    if (this.x > canvas.width) this.x = 0;
+                    else if (this.x < 0) this.x = canvas.width;
+                    if (this.y > canvas.height) this.y = 0;
+                    else if (this.y < 0) this.y = canvas.height;
+                }
+
+                draw() {
+                    ctx.fillStyle = '#ffffff'; // White for visibility
+                    ctx.globalAlpha = this.opacity;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function initParticles() {
+                particles = [];
+                const particleCount = Math.floor((window.innerWidth * window.innerHeight) / 20000);
+                const count = Math.min(Math.max(particleCount, 20), 100);
+
+                for (let i = 0; i < count; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animateParticles);
+            }
+
+            resizeCanvas();
+            animateParticles();
+        }
+
+
+
+        // ========================================
+        // BACKEND INTEGRATION
+        // ========================================
+        const API_URL = 'http://localhost:5000/api';
+        let authToken = localStorage.getItem('tesoroToken');
+        let currentUser = null;
+
+        // Save cart to localStorage for checkout page
+        function saveCartToStorage() {
+            const cartData = cart.map(item => ({
+                id: item.name,
+                name: item.name,
+                price: item.price,
+                quantity: item.quantity,
+                image: item.img
+            }));
+            localStorage.setItem('tesoroCart', JSON.stringify(cartData));
+        }
+
+        // Override updateCart to also save to storage
+        const originalUpdateCart = updateCart;
+        updateCart = function () {
+            originalUpdateCart();
+            saveCartToStorage();
+        };
+
+        // Authentication Functions
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.querySelector('#login-form input[type="email"]').value;
+            const password = document.querySelector('#login-form input[type="password"]').value;
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    authToken = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('tesoroToken', authToken);
+                    updateAuthUI();
+                    closeAccount();
+                    showNotification('Welcome back, ' + currentUser.name + '!', 'success');
+                } else {
+                    showNotification(data.message || 'Login failed', 'error');
+                }
+            } catch (error) {
+                showNotification('Connection error. Please try again.', 'error');
+            }
+        }
+
+        async function handleSignup(e) {
+            e.preventDefault();
+            const name = document.querySelector('#signup-form input[type="text"]').value;
+            const email = document.querySelector('#signup-form input[type="email"]').value;
+            const password = document.querySelector('#signup-form input[type="password"]') ?
+                document.querySelector('#signup-form input[type="password"]').value : 'TempPass123';
+
+            try {
+                const response = await fetch(`${API_URL}/auth/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    authToken = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('tesoroToken', authToken);
+                    updateAuthUI();
+                    closeAccount();
+                    showNotification('Welcome to TESORO, ' + currentUser.name + '!', 'success');
+                } else {
+                    showNotification(data.errors?.[0]?.msg || data.message || 'Signup failed', 'error');
+                }
+            } catch (error) {
+                showNotification('Connection error. Please try again.', 'error');
+            }
+        }
+
+        function logout() {
+            authToken = null;
+            currentUser = null;
+            localStorage.removeItem('tesoroToken');
+            updateAuthUI();
+            showNotification('You have been logged out.', 'success');
+        }
+
+        function updateAuthUI() {
+            const accountBtn = document.getElementById('open-account');
+            if (currentUser) {
+                accountBtn.innerHTML = `<span style="font-size:0.8rem; text-transform:uppercase;">${currentUser.name.split(' ')[0]}</span>`;
+            } else {
+                accountBtn.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+            }
+        }
+
+        // Check auth on page load
+        async function checkAuth() {
+            if (!authToken) return;
+
+            try {
+                const response = await fetch(`${API_URL}/auth/me`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const data = await response.json();
+                if (data.success) {
+                    currentUser = data.user;
+                    updateAuthUI();
+                } else {
+                    localStorage.removeItem('tesoroToken');
+                    authToken = null;
+                }
+            } catch (error) {
+                console.log('Auth check failed - server may be offline');
+            }
+        }
+
+        // Notification System
+        function showNotification(message, type = 'info') {
+            const notif = document.createElement('div');
+            notif.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                padding: 15px 25px;
+                background: ${type === 'success' ? 'var(--primary)' : type === 'error' ? '#dc3545' : '#333'};
+                color: white;
+                border-radius: 8px;
+                z-index: 10000;
+                animation: slideIn 0.3s var(--ease);
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            `;
+            notif.textContent = message;
+            document.body.appendChild(notif);
+            setTimeout(() => {
+                notif.style.animation = 'slideOut 0.3s var(--ease)';
+                setTimeout(() => notif.remove(), 300);
+            }, 3000);
+        }
+
+        // Checkout redirect
+        function goToCheckout() {
+            if (cart.length === 0) {
+                showNotification('Your cart is empty!', 'error');
+                return;
+            }
+            saveCartToStorage();
+            window.location.href = 'checkout.html';
+        }
+
+        // Attach event listeners
+        document.getElementById('login-form').addEventListener('submit', handleLogin);
+        document.getElementById('signup-form').addEventListener('submit', handleSignup);
+        document.querySelector('.checkout-btn').addEventListener('click', goToCheckout);
+
+        // Check for showLogin param
+        if (window.location.search.includes('showLogin=true')) {
+            document.getElementById('open-account').click();
+        }
+
+        // Initialize auth check
+        checkAuth();
+
+        // Add notification animations
+        const notifStyle = document.createElement('style');
+        notifStyle.textContent = `
+            @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+        `;
+        document.head.appendChild(notifStyle);
+    </script>
+</body>
+
+</html>
